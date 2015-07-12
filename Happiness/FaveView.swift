@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol FaceViewDataSource: class {
+    func smileForFaceView (sender: FaveView) -> Double?
+}
+
+@IBDesignable
 class FaveView: UIView {
 
     var lineWith: CGFloat = 3 { didSet { setNeedsDisplay() } }
@@ -20,6 +25,9 @@ class FaveView: UIView {
     var faceRadius: CGFloat {
         return min(bounds.size.width, bounds.size.height) / 2 * scale
     }
+    
+    weak var dataSource: FaceViewDataSource?
+    
     private enum Eye {case right, left}
     private struct Scaling {
         static let FaceRadiusToEyeRadiusRatio: CGFloat = 10
@@ -28,6 +36,22 @@ class FaveView: UIView {
         static let FaceRadusToEyeMouthWidthRatio: CGFloat = 1
         static let FaceRadiusToMouthHeightRadio: CGFloat = 3
         static let FaceRadiusToMouthOffsetRadio: CGFloat = 3
+    }
+    
+    override func drawRect(rect: CGRect) {
+        
+        let facePath = UIBezierPath(arcCenter: faceCenter, radius: faceRadius, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
+        facePath.lineWidth = lineWith
+        color.set()
+        facePath.stroke()
+        
+        bezierForEye(.left).stroke()
+        bezierForEye(.right).stroke()
+        
+        let smiliness = dataSource?.smileForFaceView(self) ?? 0.0
+        let beziPathSmile = bezierForSmile(smiliness)
+        beziPathSmile.lineWidth = lineWith
+        beziPathSmile.stroke()
     }
     
     private func bezierForEye(whitchEye: Eye) -> UIBezierPath {
@@ -63,23 +87,6 @@ class FaveView: UIView {
         path.addCurveToPoint(end, controlPoint1: cp1, controlPoint2: cp2)
         path.lineWidth = lineWith
         return path
-    }
-    
-    override func drawRect(rect: CGRect) {
-        
-        let facePath = UIBezierPath(arcCenter: faceCenter, radius: faceRadius, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
-        facePath.lineWidth = lineWith
-        color.set()
-        facePath.stroke()
-        
-        bezierForEye(.left).stroke()
-        bezierForEye(.right).stroke()
-        
-        let smililiness = -0.2
-        let beziPathSmile = bezierForSmile(smililiness)
-        beziPathSmile.lineWidth = lineWith
-        beziPathSmile.stroke()
-        
     }
 }
 
