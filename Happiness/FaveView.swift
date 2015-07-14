@@ -28,6 +28,13 @@ class FaveView: UIView {
     
     weak var dataSource: FaceViewDataSource?
     
+    func scale(gesture: UIPinchGestureRecognizer) {
+        if gesture.state == .Changed {
+            scale *= gesture.scale
+            gesture.scale = 1
+        }
+    }
+    
     private enum Eye {case right, left}
     private struct Scaling {
         static let FaceRadiusToEyeRadiusRatio: CGFloat = 10

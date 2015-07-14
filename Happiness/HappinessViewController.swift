@@ -14,17 +14,33 @@ class HappinessViewController: UIViewController, FaceViewDataSource
     @IBOutlet weak var faceView: FaveView! {
         didSet {
             faceView.dataSource = self
+            faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: "scale:"))
+        }
+    }
+    
+    var happiness: Int = 100 {//1到100之间, 1 sands for sad and 100 stands for happy
+        didSet {
+            happiness = max(min(happiness, 100), 0)
             updateUI()
         }
     }
     
-    var happiness: Int = 1 {//1到100之间, 1 sands for sad and 100 stands for happy
-        didSet {
-            happiness = max(min(happiness, 100), 0)
-            print("happiness = \(happiness)")
-            updateUI()
+    let happinessChangeScale: CGFloat = 2
+    @IBAction func changHappiness(sender: UIPanGestureRecognizer) {
+        switch sender.state {
+        case .Ended: fallthrough
+        case .Changed:
+            let translation = sender.translationInView(faceView)
+            let happinessChange = Int(translation.y / happinessChangeScale)
+            if happinessChange != 0 {
+                happiness += happinessChange
+                sender.setTranslation(CGPointZero, inView: faceView)
+            }
+        default:break
         }
     }
+    
+   
     
     func smileForFaceView(sender: FaveView) -> Double? {
         return Double(happiness - 50) / 50

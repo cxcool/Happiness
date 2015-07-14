@@ -19,6 +19,10 @@
                             <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Zbd-oH-u5P" customClass="FaveView" customModule="Happiness" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="mDz-D3-8vw" appends="YES" id="y5j-3r-C3o"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -34,6 +38,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cyx-pQ-79P" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="mDz-D3-8vw">
+                    <pressTypeMask key="allowedPressTypes"/>
+                    <connections>
+                        <action selector="changHappiness:" destination="Uws-3d-kDl" id="8Re-aJ-c9P"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-264" y="93"/>
         </scene>
